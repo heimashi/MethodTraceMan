@@ -33,5 +33,14 @@ public class Test {
     static {
         test3();
     }
+    public static void test4() {
+        if ("-1 > 0".length()>0) {
+            "xxxx".length();
+        }
+    }
+
+    static {
+        test4();
+    }
 
 }

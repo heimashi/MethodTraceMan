@@ -1,7 +1,7 @@
 package cn.cxzheng.tracemanplugin
 
+import com.sun.org.apache.bcel.internal.generic.INVOKESTATIC
 import com.sun.org.apache.bcel.internal.generic.RETURN
-import jdk.internal.org.objectweb.asm.Opcodes.ACC_PUBLIC
 import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.Label
 import org.objectweb.asm.MethodVisitor
@@ -60,11 +60,12 @@ class TraceClassVisitor(api: Int, cv: ClassVisitor?, var traceConfig: Config) :
             return null
         }
         var target = name.replace("/", "")
+        target = target.replace("$", "")
         if (target.length > 20) {
-            target = target.substring(0, 20)
+            target = target.substring(target.length - 20, target.length)
         }
         val methodName = "confuse$target"
-        val mv = cv.visitMethod(ACC_PUBLIC, methodName, "()V", null, null)
+        val mv = cv.visitMethod(Opcodes.ACC_PUBLIC, methodName, "()V", null, null)
         mv.visitCode()
         val l0 = Label()
         mv.visitLabel(l0)
@@ -72,6 +73,7 @@ class TraceClassVisitor(api: Int, cv: ClassVisitor?, var traceConfig: Config) :
         val l1 = Label()
         mv.visitLabel(l1)
         mv.visitEnd()
+
         return methodName
     }
 

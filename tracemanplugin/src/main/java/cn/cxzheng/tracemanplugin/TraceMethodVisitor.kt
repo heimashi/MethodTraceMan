@@ -18,7 +18,7 @@ class TraceMethodVisitor(
     private var methodName: String? = null
     private var name: String? = null
     private var className: String? = null
-    private val maxSectionNameLength = 127
+    private val maxSectionNameLength = 30
 
 
     init {
