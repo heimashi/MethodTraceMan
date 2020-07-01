@@ -1,6 +1,5 @@
 package cn.cxzheng.tracemanplugin
 
-import com.android.tools.build.jetifier.core.utils.Log
 import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
@@ -46,7 +45,7 @@ class TraceClassVisitor(api: Int, cv: ClassVisitor?, var traceConfig: Config) :
 
         val isNotNeedTraceClass = isABSClass || isBeatClass || !isConfigTraceClass
         if (traceConfig.mIsNeedLogTraceInfo && !isNotNeedTraceClass) {
-            println("MethodTraceMan-trace-class: ${className ?: "未知"}")
+            println("MethodTraceMan-trace-class: ${className ?: "unknown"}")
         }
     }
 
@@ -58,7 +57,8 @@ class TraceClassVisitor(api: Int, cv: ClassVisitor?, var traceConfig: Config) :
         exceptions: Array<out String>?
     ): MethodVisitor {
         val isConstructor = isConstructor(name)
-        return if (isABSClass || isBeatClass || !isConfigTraceClass || isConstructor) {
+        val isPublic = access and Opcodes.ACC_PUBLIC > 0
+        return if (isABSClass || isBeatClass || !isConfigTraceClass || isConstructor || !isPublic) {
             super.visitMethod(access, name, desc, signature, exceptions)
         } else {
             val mv = cv.visitMethod(access, name, desc, signature, exceptions)

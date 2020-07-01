@@ -2,7 +2,19 @@ package cn.cxzheng.asmtraceman;
 
 public class Test {
 
-    public void test1() {
+    void test11() {
+
+    }
+
+    private void test12() {
+
+    }
+
+    protected void test13() {
+
+    }
+
+    public void test14() {
 
     }
 
