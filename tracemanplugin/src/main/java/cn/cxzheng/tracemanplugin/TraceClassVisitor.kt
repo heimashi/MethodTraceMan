@@ -57,12 +57,16 @@ class TraceClassVisitor(api: Int, cv: ClassVisitor?, var traceConfig: Config) :
         signature: String?,
         exceptions: Array<out String>?
     ): MethodVisitor {
-        val isConstructor = MethodFilter.isConstructor(name)
+        val isConstructor = isConstructor(name)
         return if (isABSClass || isBeatClass || !isConfigTraceClass || isConstructor) {
             super.visitMethod(access, name, desc, signature, exceptions)
         } else {
             val mv = cv.visitMethod(access, name, desc, signature, exceptions)
             TraceMethodVisitor(api, mv, access, name, desc, className, traceConfig)
         }
+    }
+
+    private fun isConstructor(methodName: String?): Boolean {
+        return methodName?.contains("<init>") ?: false
     }
 }

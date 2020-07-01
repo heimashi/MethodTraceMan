@@ -1,7 +1,8 @@
 package cn.cxzheng.tracemanplugin
 
-import com.android.tools.build.jetifier.core.utils.Log
+import org.objectweb.asm.Label
 import org.objectweb.asm.MethodVisitor
+import org.objectweb.asm.Opcodes
 import org.objectweb.asm.commons.AdviceAdapter
 
 /**
@@ -32,29 +33,44 @@ class TraceMethodVisitor(
     override fun onMethodEnter() {
         super.onMethodEnter()
         val methodName = generatorMethodName()
-        mv.visitLdcInsn(methodName)
+        mv.visitLdcInsn(generatorMethodName())
         mv.visitMethodInsn(
-            INVOKESTATIC,
-            traceConfig.mBeatClass,
-            "start",
-            "(Ljava/lang/String;)V",
+            Opcodes.INVOKEVIRTUAL,
+            "java/lang/String",
+            "length",
+            "()I",
             false
         )
-
+        val l1 = Label()
+        mv.visitJumpInsn(Opcodes.IFNE, l1)
+        val l2 = Label()
+        mv.visitLabel(l2)
+        mv.visitLdcInsn(generatorMethodName())
+        mv.visitMethodInsn(
+            Opcodes.INVOKEVIRTUAL,
+            "java/lang/String",
+            "toString",
+            "()I",
+            false
+        )
+        mv.visitInsn(Opcodes.POP)
+        mv.visitLabel(l1)
+        mv.visitFrame(Opcodes.F_SAME, 0, null, 0, null)
         if (traceConfig.mIsNeedLogTraceInfo) {
-            println("MethodTraceMan-trace-method: ${methodName ?: "未知"}")
+            println("MethodTraceMan-trace-method: ${methodName ?: "emptyName"}")
         }
     }
 
     override fun onMethodExit(opcode: Int) {
         mv.visitLdcInsn(generatorMethodName())
         mv.visitMethodInsn(
-            INVOKESTATIC,
-            traceConfig.mBeatClass,
-            "end",
-            "(Ljava/lang/String;)V",
+            INVOKEVIRTUAL,
+            "java/lang/String",
+            "toString",
+            "()I",
             false
         )
+        mv.visitInsn(POP);
     }
 
     private fun generatorMethodName(): String? {
