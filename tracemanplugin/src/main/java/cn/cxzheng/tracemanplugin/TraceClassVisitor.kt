@@ -1,8 +1,12 @@
 package cn.cxzheng.tracemanplugin
 
+import com.sun.org.apache.bcel.internal.generic.RETURN
+import jdk.internal.org.objectweb.asm.Opcodes.ACC_PUBLIC
 import org.objectweb.asm.ClassVisitor
+import org.objectweb.asm.Label
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
+
 
 /**
  * Create by cxzheng on 2019/6/4
@@ -46,7 +50,29 @@ class TraceClassVisitor(api: Int, cv: ClassVisitor?, var traceConfig: Config) :
         val isNotNeedTraceClass = isABSClass || isBeatClass || !isConfigTraceClass
         if (traceConfig.mIsNeedLogTraceInfo && !isNotNeedTraceClass) {
             println("MethodTraceMan-trace-class: ${className ?: "unknown"}")
+            addConfuseMethod(name)
         }
+
+    }
+
+    private fun addConfuseMethod(name: String?): String? {
+        if (name.isNullOrEmpty()) {
+            return null
+        }
+        var target = name.replace("/", "")
+        if (target.length > 20) {
+            target = target.substring(0, 20)
+        }
+        val methodName = "confuse$target"
+        val mv = cv.visitMethod(ACC_PUBLIC, methodName, "()V", null, null)
+        mv.visitCode()
+        val l0 = Label()
+        mv.visitLabel(l0)
+        mv.visitInsn(Opcodes.RETURN)
+        val l1 = Label()
+        mv.visitLabel(l1)
+        mv.visitEnd()
+        return methodName
     }
 
     override fun visitMethod(
