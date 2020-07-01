@@ -33,23 +33,23 @@ repositories {
     jcenter()
 }
 
-version = "1.0.4"    //配置插件的版本号
-group = "cn.cxzheng.methodTracePlugin"   //插件的群组，插件的classpath会用到
+//version = "1.0.4"    //配置插件的版本号
+//group = "cn.cxzheng.methodTracePlugin"   //插件的群组，插件的classpath会用到
 
-pluginBundle {
-
-    website = 'https://github.com/zhengcx/MethodTraceMan'
-    vcsUrl = 'https://github.com/zhengcx/MethodTraceMan.git'
-    description = 'method time consuming trace(方法耗时插桩)'  //插件描述
-    tags = ['方法耗时', 'method', 'trace', 'asm','Android']  //插件的tag。可以通过这个在插件门户上搜索
-
-    plugins {
-        greetingsPlugin {
-            id = 'cn.cxzheng.asmtraceman'   //插件的id，到时候apply的插件id
-            displayName = 'MethodTraceMan Plugin'
-        }
-    }
-}
+//pluginBundle {
+//
+//    website = 'https://github.com/zhengcx/MethodTraceMan'
+//    vcsUrl = 'https://github.com/zhengcx/MethodTraceMan.git'
+//    description = 'method time consuming trace(方法耗时插桩)'  //插件描述
+//    tags = ['方法耗时', 'method', 'trace', 'asm','Android']  //插件的tag。可以通过这个在插件门户上搜索
+//
+//    plugins {
+//        greetingsPlugin {
+//            id = 'cn.cxzheng.asmtraceman'   //插件的id，到时候apply的插件id
+//            displayName = 'MethodTraceMan Plugin'
+//        }
+//    }
+//}
 
 
 
@@ -89,18 +89,27 @@ compileGroovy {
     classpath += files(compileKotlin.destinationDir)
 }
 
-/**
- * 上传到本地Maven
- */
+///**
+// * 上传到本地Maven
+// */
+//uploadArchives {
+//    repositories.mavenDeployer {
+//        repository(url: uri('../repo'))
+//        pom.groupId = 'cn.cxzheng'
+//        pom.artifactId = 'asmtraceman-plugin'
+//        pom.version = "0.0.1-test"
+//    }
+//}
+
+group='sg.xx.mobile.android.acc'
+version='0.0.1'
+
 uploadArchives {
-    repositories.mavenDeployer {
-        repository(url: uri('../repo'))
-        pom.groupId = 'cn.cxzheng'
-        pom.artifactId = 'asmtraceman-plugin'
-        pom.version = "0.0.1-test"
+    repositories {
+        mavenDeployer {
+            repository(url: uri('../local_maven'))
+        }
     }
 }
-
-
 
 
